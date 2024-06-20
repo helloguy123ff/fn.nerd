@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórum Nerd - Publicação de Quadrinhos</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .nav {
+            background-color: #444;
+            overflow: hidden;
+        }
+        .nav a {
+            float: left;
+            display: block;
+            color: #fff;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+        .nav a:hover {
+            background-color: #555;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .comic-upload {
+            margin-bottom: 20px;
+        }
+        .comic-upload h2 {
+            background-color: #444;
+            color: #fff;
+            padding: 10px;
+            margin: 0;
+        }
+        .comic-upload form {
+            padding: 20px;
+        }
+        .comic-upload input[type="file"],
+        .comic-upload input[type="submit"] {
+            display: block;
+            margin: 10px 0;
+            width: 100%;
+            padding: 10px;
+        }
+        .comic-viewer {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        .comic-viewer img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.5s;
+        }
+        .comic-controls {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .comic-controls button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Fórum Nerd - Publicação de Quadrinhos</h1>
+    </div>
+    <div class="nav">
+        <a href="index.html">Home</a>
+        <a href="publicar.html">Publicar Quadrinhos</a>
+        <a href="login.html">Login</a>
+    </div>
+    <div class="container">
+        <div class="comic-upload">
+            <h2>Publique seu Quadrinho</h2>
+            <form id="comicForm">
+                <input type="file" id="comicFile" multiple>
+                <input type="submit" value="Publicar">
+            </form>
+        </div>
+        <div class="comic-viewer" id="comicViewer">
+            <!-- Imagens dos quadrinhos serão exibidas aqui -->
+        </div>
+        <div class="comic-controls">
+            <button id="prevPage">Anterior</button>
+            <button id="nextPage">Próxima</button>
+        </div>
+    </div>
+
+    <script>
+        const comicForm = document.getElementById('comicForm');
+        const comicFileInput = document.getElementById('comicFile');
+        const comicViewer = document.getElementById('comicViewer');
+        const prevPageButton = document.getElementById('prevPage');
+        const nextPageButton = document.getElementById('nextPage');
+
+        let comicPages = [];
+        let currentPageIndex = 0;
+
+        comicForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const files = comicFileInput.files;
+            if (files.length > 0) {
+                comicPages = [];
+                for (let i = 0; i < files.length; i++) {
+                    const file = URL.createObjectURL(files[i]);
+                    comicPages.push(file);
+                }
+                displayPage(0);
+            }
+        });
+
+        prevPageButton.addEventListener('click', function() {
+            if (currentPageIndex > 0) {
+                displayPage(currentPageIndex - 1);
+            }
+        });
+
+        nextPageButton.addEventListener('click', function() {
+            if (currentPageIndex < comicPages.length - 1) {
+                displayPage(currentPageIndex + 1);
+            }
+        });
+
+        function displayPage(index) {
+            comicViewer.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = comicPages[index];
+            comicViewer.appendChild(img);
+            currentPageIndex = index;
+        }
+    </script>
+</body>
+</html>

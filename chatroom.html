@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sala de Bate-papo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        #messages li {
+            padding: 5px 10px;
+        }
+        #messages li:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+        #messageForm {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #ddd;
+            padding: 10px;
+        }
+        #messageForm input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #888;
+        }
+        #messageForm input[type="submit"] {
+            padding: 10px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <ul id="messages"></ul>
+    <form id="messageForm">
+        <input type="text" id="messageInput" autocomplete="off">
+        <input type="submit" value="Enviar">
+    </form>
+
+    <script>
+        const messages = document.getElementById('messages');
+        const messageForm = document.getElementById('messageForm');
+        const messageInput = document.getElementById('messageInput');
+
+        const socket = new WebSocket('ws://localhost:3000');
+
+        socket.onmessage = function(event) {
+            const li = document.createElement('li');
+            li.textContent = event.data;
+            messages.appendChild(li);
+            window.scrollTo(0, document.body.scrollHeight);
+        };
+
+        messageForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            if (messageInput.value) {
+                socket.send(messageInput.value);
+                messageInput.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
